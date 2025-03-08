@@ -1,5 +1,6 @@
 import typer
 from pathlib import Path
+from vapor.config import config_values
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -24,8 +25,10 @@ def route(
             "Where should the route be created?", 
             default=default_path
         )
+    config_base_path = config_values["MAKE_ROUTE_BASE_PATH"]
+    base_path = f"{Path.cwd()}/{config_base_path}/"
     
-    project_dir = Path(Path.cwd() / path)
+    project_dir = Path(base_path + path) 
     project_dir.mkdir(parents=True, exist_ok=True)
 
     route_file = project_dir / f"{name}.py"
