@@ -1,17 +1,31 @@
 import typer
 from pathlib import Path
 
-app = typer.Typer()
-
-command_name = "make:route"
-
+app = typer.Typer(no_args_is_help=True)
 
 @app.command()
-def route(name: str, version: str = "v1"):
+def route(
+    name: str = typer.Option(None, help="Name of the route to create"),
+    version: str = typer.Option("v1", help="API version"),
+    path: str = typer.Option(None, help="Custom path for the route")
+):
     """
     Generate a new route file with boilerplate code.
     """
-    project_dir = Path.cwd() / "routes" / "subroutes" / version
+    if name is None:
+        name = typer.prompt("Enter the name of the route")
+        if not name:
+            typer.echo("Name is required.")
+            raise typer.Exit(code=1)
+        
+    default_path = f"routes/{version}"
+    if path is None:
+        path = typer.prompt(
+            "Where should the route be created?", 
+            default=default_path
+        )
+    
+    project_dir = Path(Path.cwd() / path)
     project_dir.mkdir(parents=True, exist_ok=True)
 
     route_file = project_dir / f"{name}.py"
