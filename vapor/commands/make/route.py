@@ -19,16 +19,18 @@ def route(
             typer.echo("Name is required.")
             raise typer.Exit(code=1)
         
-    default_path = f"routes/{version}"
+    config_base_path = config_values["MAKE_ROUTE_BASE_PATH"]
+        
+    default_path = f"{version}"
     if path is None:
         path = typer.prompt(
             "Where should the route be created?", 
-            default=default_path
+            default=f"{config_base_path}/{default_path}"
         )
-    config_base_path = config_values["MAKE_ROUTE_BASE_PATH"]
-    base_path = f"{Path.cwd()}/{config_base_path}/"
+
+    path = f"{Path.cwd()}/{path}"
     
-    project_dir = Path(base_path + path) 
+    project_dir = Path(f"{path}") 
     project_dir.mkdir(parents=True, exist_ok=True)
 
     route_file = project_dir / f"{name}.py"
