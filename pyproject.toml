@@ -1,19 +1,16 @@
-[project]
+[tool.poetry]
 name = "vapor"
-version = "0.3.0"
+version = "0.3.1"
 description = ""
-authors = [
-    {name = "ChristianANoeddeboe",email = "angercraft@gmail.com"}
-]
+authors = ["ChristianANoeddeboe <angercraft@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = [
-    "typer (>=0.15.1,<0.16.0)"
-]
 
-[project.scripts]
+[tool.poetry.dependencies]
+python = ">=3.9"
+typer = ">=0.15.1,<0.16.0"
+
+[tool.poetry.scripts]
 vapor = "vapor.main:app"
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

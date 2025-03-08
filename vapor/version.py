@@ -1,8 +1,8 @@
 import typer
-from .constants import VERSION
+from .__version__ import __version__
 
 app = typer.Typer()
 
 @app.command()
 def version():
-    print(f"Vapor Version {VERSION}")
+    print(f"Vapor Version {__version__}")
