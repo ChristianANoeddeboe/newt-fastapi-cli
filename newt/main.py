@@ -1,10 +1,10 @@
 import typer
 
 from .version import app as version_app
-from vapor.commands.users import app as users_app
-from vapor.commands.make import app as make_app
-from vapor.commands.config import app as config_app
-from vapor.commands.migrate import app as migrate_app
+from newt.commands.users import app as users_app
+from newt.commands.make import app as make_app
+from newt.commands.config import app as config_app
+from newt.commands.migrate import app as migrate_app
 
 app = typer.Typer(no_args_is_help=True)
 

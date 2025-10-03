@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "vapor"
+name = "newt"
 version = "0.4.0"
 description = ""
 authors = ["ChristianANoeddeboe <angercraft@gmail.com>"]
@@ -10,7 +10,7 @@ python = ">=3.9"
 typer = ">=0.15.1,<0.16.0"
 
 [tool.poetry.scripts]
-vapor = "vapor.main:app"
+newt = "newt.main:app"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

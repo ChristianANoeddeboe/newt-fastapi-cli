@@ -1,6 +1,6 @@
 import typer
 
-from vapor.commands.config.init import app as init_app
+from newt.commands.config.init import app as init_app
 
 app = typer.Typer(no_args_is_help=True)
 

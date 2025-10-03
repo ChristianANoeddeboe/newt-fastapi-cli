@@ -1,6 +1,6 @@
 # Development Guide
 
-This document describes how to set up your development environment to work on the `vapor-cli` project.
+This document describes how to set up your development environment to work on the `newt-cli` project.
 
 ## Prerequisites
 
@@ -32,14 +32,14 @@ This document describes how to set up your development environment to work on th
 
 4. **Verify installation**
    ```bash
-   vapor --help
+   newt --help
    ```
 
 ## Project Structure
 
 ```
-vapor-cli/
-├── vapor/
+newt-cli/
+├── newt/
 │   ├── __init__.py
 │   ├── main.py
 │   ├── users.py
@@ -52,16 +52,16 @@ vapor-cli/
 
 ## Development Workflow
 
-1. Make your changes in the `vapor/` directory
+1. Make your changes in the `newt/` directory
 2. Since the package is installed in development mode (`-e` flag), your changes will be reflected immediately
 3. Test your changes by running the CLI:
    ```bash
-   vapor <command>
+   newt <command>
    ```
 
 ## Adding New Commands
 
-1. Create a new module in the `vapor/` directory
+1. Create a new module in the `newt/` directory
 2. Define your Typer app in the new module
 3. Import and add your new app to `main.py` using `app.add_typer()`
 

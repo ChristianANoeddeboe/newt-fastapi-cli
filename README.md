@@ -1,11 +1,11 @@
-# `vapor`
+# `newt`
 
 Want to extend it? Check out the [Development Guide](DEVELOPMENT.md).
 
 **Usage**:
 
 ```console
-$ vapor [OPTIONS] COMMAND [ARGS]...
+$ newt [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -20,24 +20,24 @@ $ vapor [OPTIONS] COMMAND [ARGS]...
 - `users`
 - `make`
 
-## `vapor version`
+## `newt version`
 
 **Usage**:
 
 ```console
-$ vapor version [OPTIONS]
+$ newt version [OPTIONS]
 ```
 
 **Options**:
 
 - `--help`: Show this message and exit.
 
-## `vapor users`
+## `newt users`
 
 **Usage**:
 
 ```console
-$ vapor users [OPTIONS] COMMAND [ARGS]...
+$ newt users [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -49,12 +49,12 @@ $ vapor users [OPTIONS] COMMAND [ARGS]...
 - `add`
 - `delete`
 
-### `vapor users add`
+### `newt users add`
 
 **Usage**:
 
 ```console
-$ vapor users add [OPTIONS] NAME
+$ newt users add [OPTIONS] NAME
 ```
 
 **Arguments**:
@@ -65,12 +65,12 @@ $ vapor users add [OPTIONS] NAME
 
 - `--help`: Show this message and exit.
 
-### `vapor users delete`
+### `newt users delete`
 
 **Usage**:
 
 ```console
-$ vapor users delete [OPTIONS] NAME
+$ newt users delete [OPTIONS] NAME
 ```
 
 **Arguments**:
@@ -81,12 +81,12 @@ $ vapor users delete [OPTIONS] NAME
 
 - `--help`: Show this message and exit.
 
-## `vapor make`
+## `newt make`
 
 **Usage**:
 
 ```console
-$ vapor make [OPTIONS] COMMAND [ARGS]...
+$ newt make [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -97,14 +97,14 @@ $ vapor make [OPTIONS] COMMAND [ARGS]...
 
 - `route`: Generate a new route file with boilerplate...
 
-### `vapor make route`
+### `newt make route`
 
 Generate a new route file with boilerplate code.
 
 **Usage**:
 
 ```console
-$ vapor make route [OPTIONS] NAME
+$ newt make route [OPTIONS] NAME
 ```
 
 **Arguments**:

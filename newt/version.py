@@ -5,4 +5,4 @@ app = typer.Typer()
 
 @app.command()
 def version():
-    print(f"Vapor Version {__version__}")
+    print(f"newt Version {__version__}")

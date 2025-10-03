@@ -1,7 +1,7 @@
 from typing import Annotated
 import typer
 from pathlib import Path
-from vapor.config import config_values
+from newt.config import config_values
 
 app = typer.Typer(no_args_is_help=True)
 

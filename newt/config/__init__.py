@@ -6,7 +6,7 @@ config_values = {
 }
 
 # Initialize the configuration file if it exists and load values
-file = Path(Path.cwd() / "vapor-cli.conf")
+file = Path(Path.cwd() / "newt-cli.conf")
 
 if file.exists():
     with file.open() as f:
