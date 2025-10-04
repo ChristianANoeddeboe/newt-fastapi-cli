@@ -1,4 +1,4 @@
-name: Release
+name: Prepare Release
 
 on:
   workflow_dispatch:
@@ -18,8 +18,14 @@ on:
         default: ""
 
 jobs:
-  bump-version-and-release:
+  create-release-pr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    # Only allow repository owner or collaborators
+    if: github.actor == github.repository_owner || contains(fromJSON('["ChristianANoeddeboe"]'), github.actor)
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,90 +47,61 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      #   - name: Run tests
-      #     run: |
-      #       poetry run pytest --verbose
-
       - name: Test CLI functionality
         run: |
           poetry run newt --help
           poetry run newt -v
 
+      - name: Get current version
+        id: current_version
+        run: |
+          CURRENT=$(poetry version -s)
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+
       - name: Bump version
         id: bump_version
         run: |
-          # Bump version using poetry
           poetry version ${{ github.event.inputs.version_bump }}
           NEW_VERSION=$(poetry version -s)
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "Bumped version to: $NEW_VERSION"
+          echo "Bumped version from ${{ steps.current_version.outputs.current }} to $NEW_VERSION"
 
-      - name: Commit version bump
+      - name: Build and test package
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add pyproject.toml
-          git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}"
-          git tag "v${{ steps.bump_version.outputs.new_version }}"
+          poetry build
+          poetry run newt -v
 
-      - name: Push changes
-        run: |
-          git push origin main
-          git push origin "v${{ steps.bump_version.outputs.new_version }}"
-
-      - name: Build package
-        run: poetry build
-
-      - name: Create Release Notes
-        id: release_notes
-        run: |
-          RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
-          if [ -z "$RELEASE_NOTES" ]; then
-            RELEASE_NOTES="## Changes in v${{ steps.bump_version.outputs.new_version }}
-
-          This release was automatically created with a ${{ github.event.inputs.version_bump }} version bump.
-
-          ### Installation
-          \`\`\`bash
-          pip install newt==${{ steps.bump_version.outputs.new_version }}
-          \`\`\`
-
-          ### What's Changed
-          - Version bumped from previous release
-          - See commit history for detailed changes"
-          fi
-          echo "notes<<EOF" >> $GITHUB_OUTPUT
-          echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
         with:
-          tag_name: v${{ steps.bump_version.outputs.new_version }}
-          release_name: Release v${{ steps.bump_version.outputs.new_version }}
-          body: ${{ steps.release_notes.outputs.notes }}
-          draft: false
-          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+          title: "🚀 Release v${{ steps.bump_version.outputs.new_version }}"
+          body: |
+            ## Release v${{ steps.bump_version.outputs.new_version }}
+            
+            This PR prepares a new release by bumping the version from `${{ steps.current_version.outputs.current }}` to `${{ steps.bump_version.outputs.new_version }}`.
+            
+            ### Changes
+            - Version bump (${{ github.event.inputs.version_bump }}): `${{ steps.current_version.outputs.current }}` → `${{ steps.bump_version.outputs.new_version }}`
+            - Package builds successfully
+            - CLI functionality tested
+            
+            ### Release Notes
+            ${{ github.event.inputs.release_notes || 'No additional release notes provided.' }}
+            
+            ### Next Steps
+            1. Review and merge this PR
+            2. Create a release from the tag `v${{ steps.bump_version.outputs.new_version }}`
+            3. The build workflow will automatically attach assets to the release
+            
+            ---
+            *This PR was automatically created by the Release workflow.*
+          branch: release/v${{ steps.bump_version.outputs.new_version }}
+          delete-branch: true
 
-      - name: Upload wheel to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/newt-${{ steps.bump_version.outputs.new_version }}-py3-none-any.whl
-          asset_name: newt-${{ steps.bump_version.outputs.new_version }}-py3-none-any.whl
-          asset_content_type: application/x-wheel+zip
-
-      - name: Upload source distribution to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/newt-${{ steps.bump_version.outputs.new_version }}.tar.gz
-          asset_name: newt-${{ steps.bump_version.outputs.new_version }}.tar.gz
-          asset_content_type: application/gzip
+          name: dist-v${{ steps.bump_version.outputs.new_version }}
+          path: dist/

@@ -1,0 +1,137 @@
+name: Auto Release on Version Bump
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  auto-release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.title, '🚀 Release v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Get version from pyproject.toml
+        id: get_version
+        run: |
+          VERSION=$(poetry version -s)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          if git tag --list | grep -q "^v${{ steps.get_version.outputs.version }}$"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} does not exist"
+          fi
+
+      - name: Create and push tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "v${{ steps.get_version.outputs.version }}"
+          git push origin "v${{ steps.get_version.outputs.version }}"
+
+      - name: Test CLI functionality
+        run: |
+          poetry run newt --help
+          poetry run newt -v
+
+      - name: Build package
+        run: poetry build
+
+      - name: Extract release notes from PR
+        id: extract_notes
+        run: |
+          # Extract release notes from the PR body
+          RELEASE_NOTES=$(echo '${{ github.event.pull_request.body }}' | sed -n '/### Release Notes/,/###/p' | sed '1d;$d' | sed '/^$/d')
+          
+          if [ -z "$RELEASE_NOTES" ]; then
+            RELEASE_NOTES="## Changes in v${{ steps.get_version.outputs.version }}
+
+          This release was automatically created from PR #${{ github.event.pull_request.number }}.
+
+          ### Installation
+          \`\`\`bash
+          pip install newt==${{ steps.get_version.outputs.version }}
+          \`\`\`
+
+          ### What's Changed
+          - Version bumped to ${{ steps.get_version.outputs.version }}
+          - See PR #${{ github.event.pull_request.number }} for details
+          
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.get_version.outputs.version }}...HEAD"
+          fi
+          
+          # Save multiline output
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: Release v${{ steps.get_version.outputs.version }}
+          body: ${{ steps.extract_notes.outputs.notes }}
+          draft: false
+          prerelease: false
+
+      - name: Upload wheel to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/newt-${{ steps.get_version.outputs.version }}-py3-none-any.whl
+          asset_name: newt-${{ steps.get_version.outputs.version }}-py3-none-any.whl
+          asset_content_type: application/x-wheel+zip
+
+      - name: Upload source distribution to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/newt-${{ steps.get_version.outputs.version }}.tar.gz
+          asset_name: newt-${{ steps.get_version.outputs.version }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Comment on PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ github.event.pull_request.number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🎉 **Release Created!** \n\n✅ Release [v${{ steps.get_version.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.get_version.outputs.version }}) has been automatically created and published!\n\n📦 **Installation:**\n```bash\npip install newt==${{ steps.get_version.outputs.version }}\n```'
+            })
