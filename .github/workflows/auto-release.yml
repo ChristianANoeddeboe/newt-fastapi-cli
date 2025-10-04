@@ -70,7 +70,7 @@ jobs:
         run: |
           # Extract release notes from the PR body
           RELEASE_NOTES=$(echo '${{ github.event.pull_request.body }}' | sed -n '/### Release Notes/,/###/p' | sed '1d;$d' | sed '/^$/d')
-          
+
           if [ -z "$RELEASE_NOTES" ]; then
             RELEASE_NOTES="## Changes in v${{ steps.get_version.outputs.version }}
 
@@ -84,10 +84,10 @@ jobs:
           ### What's Changed
           - Version bumped to ${{ steps.get_version.outputs.version }}
           - See PR #${{ github.event.pull_request.number }} for details
-          
+
           **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.get_version.outputs.version }}...HEAD"
           fi
-          
+
           # Save multiline output
           echo "notes<<EOF" >> $GITHUB_OUTPUT
           echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT

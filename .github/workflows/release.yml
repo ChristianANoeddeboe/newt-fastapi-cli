@@ -23,9 +23,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    # Only allow repository owner or collaborators
-    if: github.actor == github.repository_owner || contains(fromJSON('["ChristianANoeddeboe"]'), github.actor)
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -79,22 +76,22 @@ jobs:
           title: "🚀 Release v${{ steps.bump_version.outputs.new_version }}"
           body: |
             ## Release v${{ steps.bump_version.outputs.new_version }}
-            
+
             This PR prepares a new release by bumping the version from `${{ steps.current_version.outputs.current }}` to `${{ steps.bump_version.outputs.new_version }}`.
-            
+
             ### Changes
             - Version bump (${{ github.event.inputs.version_bump }}): `${{ steps.current_version.outputs.current }}` → `${{ steps.bump_version.outputs.new_version }}`
             - Package builds successfully
             - CLI functionality tested
-            
+
             ### Release Notes
             ${{ github.event.inputs.release_notes || 'No additional release notes provided.' }}
-            
+
             ### Next Steps
             1. Review and merge this PR
             2. Create a release from the tag `v${{ steps.bump_version.outputs.new_version }}`
             3. The build workflow will automatically attach assets to the release
-            
+
             ---
             *This PR was automatically created by the Release workflow.*
           branch: release/v${{ steps.bump_version.outputs.new_version }}
