@@ -98,7 +98,7 @@ jobs:
           delete-branch: true
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-v${{ steps.bump_version.outputs.new_version }}
           path: dist/
