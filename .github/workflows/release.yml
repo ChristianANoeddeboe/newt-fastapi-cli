@@ -30,43 +30,40 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: Install UV
+        uses: astral-sh/setup-uv@v6
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version-file: .python-version
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Install dependencies
-        run: poetry install
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
 
       - name: Test CLI functionality
         run: |
-          poetry run newt --help
-          poetry run newt -v
+          uv run newt --help
+          uv run newt -v
 
       - name: Get current version
         id: current_version
         run: |
-          CURRENT=$(poetry version -s)
+          CURRENT=$(uv version --short)
           echo "current=$CURRENT" >> $GITHUB_OUTPUT
 
       - name: Bump version
         id: bump_version
         run: |
-          poetry version ${{ github.event.inputs.version_bump }}
-          NEW_VERSION=$(poetry version -s)
+          uv version --bump ${{ github.event.inputs.version_bump }}
+          NEW_VERSION=$(uv version --short)
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "Bumped version from ${{ steps.current_version.outputs.current }} to $NEW_VERSION"
 
       - name: Build and test package
         run: |
-          poetry build
-          poetry run newt -v
+          uv build
+          uv run newt -v
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
