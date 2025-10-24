@@ -12,6 +12,7 @@ on:
           - patch
           - minor
           - major
+          - dev
       release_notes:
         description: "Release notes (optional)"
         required: false
