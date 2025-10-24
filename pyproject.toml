@@ -1,17 +1,11 @@
-[tool.poetry]
-name = "newt"
+[project]
+name = "newt-fastapi-cli"
 version = "0.1.1"
-description = ""
-authors = ["ChristianANoeddeboe <angercraft@gmail.com>"]
+description = "A simple cli supposed to compliment fastapi development."
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = ">=3.9"
-typer = ">=0.15.1,<0.16.0"
-
-[tool.poetry.scripts]
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.20.0",
+]
+[project.scripts]
 newt = "newt.main:app"
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
