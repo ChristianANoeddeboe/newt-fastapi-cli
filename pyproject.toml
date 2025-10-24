@@ -1,5 +1,5 @@
 [project]
-name = "newt-fastapi-cli"
+name = "newt-cli"
 version = "0.1.1"
 description = "A simple cli supposed to compliment fastapi development."
 readme = "README.md"
