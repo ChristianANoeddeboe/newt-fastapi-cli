@@ -45,7 +45,7 @@ wheels = [
 ]
 
 [[package]]
-name = "newt-fastapi-cli"
+name = "newt-cli"
 version = "0.1.1"
 source = { virtual = "." }
 dependencies = [
