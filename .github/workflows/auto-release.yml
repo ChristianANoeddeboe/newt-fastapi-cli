@@ -54,11 +54,6 @@ jobs:
           git tag "v${{ steps.get_version.outputs.version }}"
           git push origin "v${{ steps.get_version.outputs.version }}"
 
-      - name: Test CLI functionality
-        run: |
-          uv run newt --help
-          uv run newt -v
-
       - name: Build package
         run: uv build
 

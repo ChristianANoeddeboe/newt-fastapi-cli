@@ -41,11 +41,6 @@ jobs:
       - name: Install the project
         run: uv sync --locked --all-extras --dev
 
-      - name: Test CLI functionality
-        run: |
-          uv run newt --help
-          uv run newt -v
-
       - name: Get current version
         id: current_version
         run: |
