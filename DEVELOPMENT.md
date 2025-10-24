@@ -5,7 +5,7 @@ This document describes how to set up your development environment to work on th
 ## Prerequisites
 
 - Python 3.9 or higher
-- [Poetry](https://python-poetry.org/) (for dependency management and building)
+- [UV](https://docs.astral.sh/uv/getting-started/installation/) (for dependency management and building)
 
 ## Setting Up Development Environment
 
@@ -19,92 +19,77 @@ This document describes how to set up your development environment to work on th
 2. **Install dependencies and the package in development mode**
 
    ```bash
-   poetry install
+   uv install
    ```
 
    This will:
 
    - Create a virtual environment automatically
    - Install all dependencies from `pyproject.toml`
-   - Install the `newt` package in editable mode
 
-3. **Verify installation**
+   Now install the package in editable mode:
+
    ```bash
-   poetry run newt --help
-   # or activate the shell and run directly:
-   poetry shell
+   uv pip install -e .
+   ```
+
+1. **Verify installation**
+   ```bash
    newt --help
    ```
 
 ## Project Structure
 
-```
+```bash
 newt-fastapi-cli/
 ├── newt/
 │   ├── __init__.py
 │   ├── main.py                    # Main CLI app with version handling
 │   ├── constants.py
-│   └── commands/                  # Command modules
+│   ├── config
+│   │   └── __init__.py            # Configuration management
+│   └── commands/                  # Commands folder
 │       ├── users/
 │       ├── make/
 │       ├── config/
+│       ├── ...                    # Other commands
 │       └── migrate/
 ├── tests/
 ├── pyproject.toml                 # Project configuration and dependencies
-├── poetry.lock                    # Locked dependency versions
+├── uv.lock                        # Locked dependency versions
 ├── README.md
 └── DEVELOPMENT.md
 ```
 
 ## Development Workflow
 
-1. **Activate the Poetry environment**
 
-   ```bash
-   poetry shell
-   # or run commands with: poetry run <command>
-   ```
+1. **Make your changes** in the `newt/` directory
 
-2. **Make your changes** in the `newt/` directory
+- Changes are reflected immediately since the package is installed in editable mode
 
-   - Changes are reflected immediately since the package is installed in editable mode
-
-3. **Test your changes**
+2. **Test your changes**
 
    ```bash
    newt <command>
    newt --help
-   newt -v  # Check version
    ```
 
-4. **Add dependencies** (if needed)
+3. **Add dependencies** (if needed)
    ```bash
-   poetry add <package-name>        # Runtime dependency
-   poetry add --group dev <package> # Development dependency
+   uv add <package-name>        # Runtime dependency
+   uv add --dev <package>       # Development dependency
    ```
 
 ## Version Management
 
 The version is managed in `pyproject.toml` and automatically used by the CLI:
 
-1. **Update version**
+**Update version**
 
    ```bash
-   poetry version patch    # 0.1.0 -> 0.1.1
-   poetry version minor    # 0.1.0 -> 0.2.0
-   poetry version major    # 0.1.0 -> 1.0.0
+   uv version --bump <level>    # [possible values: major, minor, patch, stable, alpha, beta, rc, post, dev]
    # or manually edit pyproject.toml
-   ```
-
-2. **Reinstall to pick up version changes**
-
-   ```bash
-   poetry install
-   ```
-
-3. **Verify version**
-   ```bash
-   newt -v
    ```
 
 ## Adding New Commands
@@ -144,16 +129,16 @@ The version is managed in `pyproject.toml` and automatically used by the CLI:
 
 ```bash
 # Run tests (when implemented)
-poetry run pytest
+uv run pytest
 
 # Run tests with coverage
-poetry run pytest --cov=newt
+uv run pytest --cov=newt
 ```
 
 ## Building for Distribution
 
 ```bash
-poetry build
+uv build
 ```
 
 This creates both wheel and source distributions in the `dist/` directory.
@@ -163,12 +148,12 @@ This creates both wheel and source distributions in the `dist/` directory.
 1. **Build the package**
 
    ```bash
-   poetry build
+   uv build
    ```
 
 2. **Publish to PyPI**
    ```bash
-   poetry publish
+   uv publish
    # or for test PyPI:
-   poetry publish -r testpypi
+   uv publish -r testpypi
    ```

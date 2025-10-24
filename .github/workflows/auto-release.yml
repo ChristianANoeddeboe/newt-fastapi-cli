@@ -17,24 +17,21 @@ jobs:
         with:
           ref: main
 
+      - name: Install UV
+        uses: astral-sh/setup-uv@v6
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version-file: .python-version
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Install dependencies
-        run: poetry install
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
 
       - name: Get version from pyproject.toml
         id: get_version
         run: |
-          VERSION=$(poetry version -s)
+          VERSION=$(uv version --short)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $VERSION"
 
@@ -59,11 +56,11 @@ jobs:
 
       - name: Test CLI functionality
         run: |
-          poetry run newt --help
-          poetry run newt -v
+          uv run newt --help
+          uv run newt -v
 
       - name: Build package
-        run: poetry build
+        run: uv build
 
       - name: Extract release notes from PR
         id: extract_notes
@@ -75,11 +72,6 @@ jobs:
             RELEASE_NOTES="## Changes in v${{ steps.get_version.outputs.version }}
 
           This release was automatically created from PR #${{ github.event.pull_request.number }}.
-
-          ### Installation
-          \`\`\`bash
-          pip install newt==${{ steps.get_version.outputs.version }}
-          \`\`\`
 
           ### What's Changed
           - Version bumped to ${{ steps.get_version.outputs.version }}
