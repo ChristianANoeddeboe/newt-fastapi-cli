@@ -90,6 +90,6 @@ jobs:
           draft: false
           prerelease: false
           artifacts: |
-            ./dist/newt-${{ steps.get_version.outputs.version }}-py3-none-any.whl
-            ./dist/newt-${{ steps.get_version.outputs.version }}.tar.gz
+            dist/*.whl
+            dist/*.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
