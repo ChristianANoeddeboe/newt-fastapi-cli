@@ -10,10 +10,10 @@ from newt.commands.migrate import app as migrate_app
 def version_callback(value: bool):
     if value:
         try:
-            pkg_version = version("newt")
+            pkg_version = version("newt-cli")
         except PackageNotFoundError:
             pkg_version = "development"
-        typer.echo(f"newt {pkg_version}")
+        typer.echo(f"newt-cli {pkg_version}")
         raise typer.Exit()
 
 app = typer.Typer(
