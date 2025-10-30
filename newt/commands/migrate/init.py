@@ -13,11 +13,10 @@ def init(
     template: Annotated[str, typer.Option("--template", "-t", help="Custom template for the alembic directory")] = None,
 ):
     """
-    Checks if alembic is already initialized in the current directory.
-    If alembic is already initialized in the current directory then it will ask if the user wants to reinitialize it.
-    If the user chooses to reinitialize it, it will remove the existing alembic directory and create a new one.
-    If the user chooses not to reinitialize it, it will exit the program.
-    Otherwise, it will create a new alembic directory in the current or given path.
+    Creates a new alembic directory in the current or given path.
+    If alembic is already initialized in the specified directory, it will ask if the user wants to reinitialize it.
+    If the user chooses to reinitialize, it will remove the existing alembic directory and create a new one.
+    If the user chooses not to reinitialize, it will exit the program.
     """
     # Check if alembic is already initialized in the current directory
     project_dir = Path(f"{Path.cwd()}/{path}")
