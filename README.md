@@ -12,17 +12,17 @@ $ newt [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
-* `-v, --version`: Show version and exit
-* `--install-completion`: Install completion for the current shell.
-* `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
-* `--help`: Show this message and exit.
+- `-v, --version`: Show version and exit
+- `--install-completion`: Install completion for the current shell.
+- `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
+- `--help`: Show this message and exit.
 
 **Commands**:
 
-* `users`
-* `make`
-* `config`
-* `migrate`
+- `users`
+- `make`
+- `config`
+- `migrate`
 
 ## `newt users`
 
@@ -34,12 +34,12 @@ $ newt users [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 **Commands**:
 
-* `add`
-* `delete`
+- `add`
+- `delete`
 
 ### `newt users add`
 
@@ -51,11 +51,11 @@ $ newt users add [OPTIONS] NAME
 
 **Arguments**:
 
-* `NAME`: [required]
+- `NAME`: [required]
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 ### `newt users delete`
 
@@ -67,11 +67,11 @@ $ newt users delete [OPTIONS] NAME
 
 **Arguments**:
 
-* `NAME`: [required]
+- `NAME`: [required]
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 ## `newt make`
 
@@ -83,11 +83,11 @@ $ newt make [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 **Commands**:
 
-* `route`: Generate a new route file with boilerplate...
+- `route`: Generate a new route file with boilerplate...
 
 ### `newt make route`
 
@@ -101,10 +101,10 @@ $ newt make route [OPTIONS]
 
 **Options**:
 
-* `--name TEXT`: Name of the route to create
-* `--version TEXT`: API version  [default: v1]
-* `--path TEXT`: Custom path for the route
-* `--help`: Show this message and exit.
+- `--name TEXT`: Name of the route to create
+- `--version TEXT`: API version [default: v1]
+- `--path TEXT`: Custom path for the route
+- `--help`: Show this message and exit.
 
 ## `newt config`
 
@@ -116,11 +116,11 @@ $ newt config [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 **Commands**:
 
-* `init`: Create a default newt-cli.conf file if...
+- `init`: Create a default newt-cli.conf file if...
 
 ### `newt config init`
 
@@ -134,7 +134,7 @@ $ newt config init [OPTIONS]
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 ## `newt migrate`
 
@@ -146,23 +146,22 @@ $ newt migrate [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 **Commands**:
 
-* `init`: Checks if alembic is already initialized...
-* `up`: Upgrades the database to the specified...
-* `down`: Downgrades the database to the specified...
-* `make`: Creates a new migration file.
+- `init`: Checks if alembic is already initialized...
+- `up`: Upgrades the database to the specified...
+- `down`: Downgrades the database to the specified...
+- `make`: Creates a new migration file.
 
 ### `newt migrate init`
 
 Checks if alembic is already initialized in the current directory.
-If not then it checks if alembic is installed. If not then it will prompt the user to install it.
-After installing alembic it will create a new alembic directory in the current or given path.
 If alembic is already initialized in the current directory then it will ask if the user wants to reinitialize it.
 If the user chooses to reinitialize it, it will remove the existing alembic directory and create a new one.
 If the user chooses not to reinitialize it, it will exit the program.
+Otherwise, it will create a new alembic directory in the current or given path.
 
 **Usage**:
 
@@ -172,12 +171,12 @@ $ newt migrate init [OPTIONS] [PATH]
 
 **Arguments**:
 
-* `[PATH]`: Relative path to the alembic directory  [default: alembic]
+- `[PATH]`: Relative path to the alembic directory [default: alembic]
 
 **Options**:
 
-* `-t, --template TEXT`: Custom template for the alembic directory
-* `--help`: Show this message and exit.
+- `-t, --template TEXT`: Custom template for the alembic directory
+- `--help`: Show this message and exit.
 
 ### `newt migrate up`
 
@@ -194,11 +193,11 @@ $ newt migrate up [OPTIONS] [REVISION]
 
 **Arguments**:
 
-* `[REVISION]`: Revision to upgrade to
+- `[REVISION]`: Revision to upgrade to
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 ### `newt migrate down`
 
@@ -215,11 +214,11 @@ $ newt migrate down [OPTIONS] [REVISION]
 
 **Arguments**:
 
-* `[REVISION]`: Revision to downgrade to
+- `[REVISION]`: Revision to downgrade to
 
 **Options**:
 
-* `--help`: Show this message and exit.
+- `--help`: Show this message and exit.
 
 ### `newt migrate make`
 
@@ -235,9 +234,9 @@ $ newt migrate make [OPTIONS] MESSAGE
 
 **Arguments**:
 
-* `MESSAGE`: Message for the migration file  [required]
+- `MESSAGE`: Message for the migration file [required]
 
 **Options**:
 
-* `-m, --manual`: Disable auto generation of migration files
-* `--help`: Show this message and exit.
+- `-m, --manual`: Disable auto generation of migration files
+- `--help`: Show this message and exit.
