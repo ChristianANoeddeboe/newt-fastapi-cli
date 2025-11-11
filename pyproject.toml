@@ -1,6 +1,6 @@
 [project]
 name = "newt-cli"
-version = "0.1.3"
+version = "0.2.0"
 description = "A simple cli supposed to compliment fastapi development."
 readme = "README.md"
 requires-python = ">=3.11"
