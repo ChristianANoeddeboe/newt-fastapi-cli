@@ -31,7 +31,7 @@ def init(
     project_dir.mkdir(parents=True, exist_ok=True)
 
     # Create command
-    command = ["alembic", "init", str(project_dir)]
+    command = ["alembic", "init", path]
     if template:
         command.extend(["--template", template])
 
