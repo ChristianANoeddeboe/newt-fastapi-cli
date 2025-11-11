@@ -14,7 +14,7 @@ app = typer.Typer(no_args_is_help=True)
 def init(
     path: Annotated[
         str, typer.Argument(help="Relative path to the alembic directory")
-    ] = "alembic",
+    ] = ".newt",
     template: Annotated[
         str,
         typer.Option(
